@@ -2,33 +2,24 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const routes = require('./routes');
 
 const PORT = process.env.PORT || 5000;
 
+// ---- Добавляем возможность отвечать на запросы к API с любого адреса
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
+// ---- Путь к статике -----------------------------------
 app.use(express.static(__dirname + '/public'))
-app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/public/index.html');
-});
 
-app.get('/messages', function(req, res) {
-    res.sendFile(__dirname + '/public/messages.json');
-});
+// ---- Обработка роутов ----------------------------------
+routes(app);
 
-app.get('/contacts', function(req, res) {
-    res.sendFile(__dirname + '/public/contacts.json');
-});
-
-app.get('/user', function(req, res) {
-    res.sendFile(__dirname + '/public/user.json');
-});
-
-
+// ---- Работа с сокетами ---------------------------------
 io.on('connection', (socket) => {
     console.log('Client connected');
 
