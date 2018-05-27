@@ -24,6 +24,10 @@ app.get('/contacts', function(req, res) {
     res.sendFile(__dirname + '/public/contacts.json');
 });
 
+app.get('/user', function(req, res) {
+    res.sendFile(__dirname + '/public/user.json');
+});
+
 
 io.on('connection', (socket) => {
     console.log('Client connected');
